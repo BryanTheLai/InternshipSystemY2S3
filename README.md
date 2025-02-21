@@ -11,7 +11,7 @@
 ```
 src/main/java/              (Java Code Root - Packages start here)
 ├── main/                   (Standard Package Folder)
-│   └── java/               (Standard Folder - Folders=Package Names)
+│   └── java/com\mycompany\internshipsystemy2s3    (Standard Folder - Folders=Package Names)
 
 │       ├── adt/                 (Package: `main.java.adt` -  [Abstract Data Types])
 │       │   ├── ArrayList.java           (Your ArrayList -  <Implementation Details>)
