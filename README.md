@@ -17,28 +17,6 @@ src/main/java/              (Java Code Root - Packages start here)
 │       │   ├── ArrayList.java           (Your ArrayList -  <Implementation Details>)
 │       │   └── ListInterface.java       (List ADT Interface -  <Functionality Definition>)
 
-│       ├── applicantmanagement/ (Package: `main.java.applicantmanagement` -  [Applicant Module]) @ Bryan
-│       │   ├── Applicant.java           (Entity: `Applicant` Data)
-│       │   ├── ApplicantController.java (Control: `Applicant` Logic)
-│       │   └── ApplicantUI.java         (Boundary: `Applicant` UI)
-
-│       ├── jobmanagement/       (Package: `main.java.jobmanagement` -  [Job Module])             @ Alia
-│       │   ├── Job.java                 (Entity: `Job` Data)
-│       │   ├── JobController.java       (Control: `Job` Logic)
-│       │   └── JobUI.java               (Boundary: `Job` UI)
-
-│       ├── matchingengine/      (Package: `main.java.matchingengine` -  [Matching Module])
-│       │   └── MatchingService.java     (Control: Matching Logic)
-
-│       ├── reporting/           (Package: `main.java.reporting` -  [Reporting Module])
-│       │   └── ReportGenerator.java     (Control: Report Logic)
-
-│       ├── scheduleinterview/   (Package: `main.java.scheduleinterview` -  [Scheduling Module])
-│       │   └── InterviewScheduler.java  (Control: Interview Logic)
-
-│       ├── search/              (Package: `main.java.search` -  [Search Module])
-│       │   └── SearchService.java       (Control: Search Logic)
-
 │       └── Main.java            (Program Start Point)
 ```
 
