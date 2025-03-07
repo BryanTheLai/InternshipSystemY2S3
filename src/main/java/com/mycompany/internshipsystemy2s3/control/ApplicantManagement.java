@@ -1,8 +1,8 @@
 package com.mycompany.internshipsystemy2s3.control;
 
-import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedList;
 import com.mycompany.internshipsystemy2s3.dao.ApplicantDAO;
 import com.mycompany.internshipsystemy2s3.entity.Applicant;
+import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedListInterface;
 
 public class ApplicantManagement {
     private ApplicantDAO applicantDAO;
@@ -23,11 +23,11 @@ public class ApplicantManagement {
         applicantDAO.removeApplicant(id);
     }
 
-    public DoublyLinkedList<Applicant> filterApplicants(ApplicantDAO.FilterCriteria criteria) {
+    public DoublyLinkedListInterface<Applicant> filterApplicants(ApplicantDAO.FilterCriteria criteria) {
         return applicantDAO.filterApplicants(criteria);
     }
 
-    public DoublyLinkedList<Applicant> getAllApplicants() {
+    public DoublyLinkedListInterface<Applicant> getAllApplicants() {
         return applicantDAO.getAllApplicants();
     }
 }

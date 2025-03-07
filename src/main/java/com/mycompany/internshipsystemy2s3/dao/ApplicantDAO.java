@@ -1,13 +1,14 @@
 package com.mycompany.internshipsystemy2s3.dao;
 
 import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedList;
+import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedListInterface;
 import com.mycompany.internshipsystemy2s3.entity.Applicant;
 import com.mycompany.internshipsystemy2s3.entity.Location;
 import com.mycompany.internshipsystemy2s3.entity.JobType;
 import com.mycompany.internshipsystemy2s3.entity.Skill;
 
 public class ApplicantDAO {
-    private DoublyLinkedList<Applicant> applicants;
+    private DoublyLinkedListInterface<Applicant> applicants;
 
     public ApplicantDAO() {
         this.applicants = new DoublyLinkedList<>();
@@ -51,8 +52,8 @@ public class ApplicantDAO {
         }
     }
 
-    public DoublyLinkedList<Applicant> filterApplicants(FilterCriteria criteria) {
-        DoublyLinkedList<Applicant> filteredApplicants = new DoublyLinkedList<>();
+    public DoublyLinkedListInterface<Applicant> filterApplicants(FilterCriteria criteria) {
+        DoublyLinkedListInterface<Applicant> filteredApplicants = new DoublyLinkedList<>();
         for (int i = 0; i < applicants.size(); i++) {
             Applicant applicant = applicants.get(i);
             if (criteria.matches(applicant)) {
@@ -62,7 +63,7 @@ public class ApplicantDAO {
         return filteredApplicants;
     }
 
-    public DoublyLinkedList<Applicant> getAllApplicants() {
+    public DoublyLinkedListInterface<Applicant> getAllApplicants() {
         return applicants;
     }
 

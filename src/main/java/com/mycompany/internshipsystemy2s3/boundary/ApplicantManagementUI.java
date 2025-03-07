@@ -6,9 +6,8 @@ import com.mycompany.internshipsystemy2s3.entity.Location;
 import com.mycompany.internshipsystemy2s3.entity.JobType;
 import com.mycompany.internshipsystemy2s3.entity.Skill;
 import com.mycompany.internshipsystemy2s3.dao.ApplicantDAO.FilterCriteria;
+import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedListInterface;
 import java.util.Scanner;
-
-import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedList;
 
 public class ApplicantManagementUI {
     private ApplicantManagement applicantManagement;
@@ -150,7 +149,7 @@ public class ApplicantManagementUI {
             return matches;
         };
 
-        DoublyLinkedList<Applicant> filteredApplicants = applicantManagement.filterApplicants(criteria);
+        DoublyLinkedListInterface<Applicant> filteredApplicants = applicantManagement.filterApplicants(criteria);
 
         System.out.println("Filtered Applicants:");
         for (int i = 0; i < filteredApplicants.size(); i++) {
@@ -159,7 +158,7 @@ public class ApplicantManagementUI {
     }
 
     private void displayAllApplicants() {
-        DoublyLinkedList<Applicant> allApplicants = applicantManagement.getAllApplicants();
+        DoublyLinkedListInterface<Applicant> allApplicants = applicantManagement.getAllApplicants();
         System.out.println("All Applicants:");
         for (int i = 0; i < allApplicants.size(); i++) {
             System.out.println(allApplicants.get(i));
