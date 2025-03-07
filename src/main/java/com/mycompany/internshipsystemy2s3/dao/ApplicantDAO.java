@@ -3,9 +3,6 @@ package com.mycompany.internshipsystemy2s3.dao;
 import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedList;
 import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedListInterface;
 import com.mycompany.internshipsystemy2s3.entity.Applicant;
-import com.mycompany.internshipsystemy2s3.entity.Location;
-import com.mycompany.internshipsystemy2s3.entity.JobType;
-import com.mycompany.internshipsystemy2s3.entity.Skill;
 
 public class ApplicantDAO {
     private DoublyLinkedListInterface<Applicant> applicants;
@@ -16,17 +13,34 @@ public class ApplicantDAO {
     }
 
     private void prefillData() {
-        applicants.add(new Applicant("ID1", "Alice Smith", Location.NEW_YORK, JobType.FULL_TIME, Skill.DEVOPS));
-        applicants.add(new Applicant("ID2", "Bob Johnson", Location.LOS_ANGELES, JobType.PART_TIME, Skill.FRONTEND));
-        applicants.add(new Applicant("ID3", "Charlie Brown", Location.CHICAGO, JobType.INTERNSHIP, Skill.BACKEND));
-        applicants.add(new Applicant("ID4", "David Wilson", Location.HOUSTON, JobType.FULL_TIME, Skill.FULLSTACK));
-        applicants.add(new Applicant("ID5", "Eve Davis", Location.PHOENIX, JobType.PART_TIME, Skill.MOBILE));
-        applicants.add(new Applicant("ID6", "Frank Miller", Location.PHILADELPHIA, JobType.INTERNSHIP, Skill.DATA_SCIENTIST));
-        applicants.add(new Applicant("ID7", "Grace Lee", Location.SAN_ANTONIO, JobType.FULL_TIME, Skill.MACHINE_LEARNING_ENGINEER));
-        applicants.add(new Applicant("ID8", "Hank Martin", Location.SAN_DIEGO, JobType.PART_TIME, Skill.CLOUD_ENGINEER));
-        applicants.add(new Applicant("ID9", "Ivy Clark", Location.DALLAS, JobType.INTERNSHIP, Skill.SECURITY_ENGINEER));
-        applicants.add(new Applicant("ID10", "Jack Lewis", Location.SAN_JOSE, JobType.FULL_TIME, Skill.DATABASE_ADMINISTRATOR));
-        // Add more applicants as needed
+        // Adding sample data with Malaysian universities and locations
+        applicants.add(new Applicant("ID1", "Alice Smith", "Shah Alam", "Full-time", "DevOps"));
+        applicants.add(new Applicant("ID2", "Bob Johnson", "Cyberjaya", "Part-time", "Frontend"));
+        applicants.add(new Applicant("ID3", "Charlie Brown", "Petaling Jaya", "Internship", "Backend"));
+        applicants.add(new Applicant("ID4", "David Wilson", "Bangi", "Full-time", "Fullstack"));
+        applicants.add(new Applicant("ID5", "Eve Davis", "Setapak", "Part-time", "Mobile"));
+        
+        // Add more detailed applicant for internship module
+        applicants.add(new Applicant("ID6", "Frank Miller", "Shah Alam", "Internship", "Data Science",
+                                     "Universiti Teknologi MARA", "Computer Science", 3.8, "2024", "Applied"));
+        
+        applicants.add(new Applicant("ID7", "Grace Lee", "Cyberjaya", "Internship", "Machine Learning",
+                                     "Multimedia University", "Artificial Intelligence", 3.7, "2025", "Pending"));
+        
+        applicants.add(new Applicant("ID8", "Hank Martin", "Setapak", "Part-time", "Cloud Engineering",
+                                     "TARUMT", "Information Technology", 3.5, "2024", "Applied"));
+        
+        applicants.add(new Applicant("ID9", "Ivy Clark", "Kajang", "Internship", "Security",
+                                     "Universiti Tenaga Nasional", "Cybersecurity", 3.9, "2023", "Shortlisted"));
+        
+        applicants.add(new Applicant("ID10", "Jack Lewis", "Seri Kembangan", "Full-time", "Database Administration",
+                                     "Universiti Putra Malaysia", "Information Systems", 3.6, "2024", "Interview"));
+        
+        applicants.add(new Applicant("ID11", "Michelle Tan", "Subang Jaya", "Internship", "UI/UX Design",
+                                     "Taylor's University", "Multimedia Design", 3.7, "2025", "Applied"));
+        
+        applicants.add(new Applicant("ID12", "Nizam Abdullah", "Petaling Jaya", "Part-time", "Web Development",
+                                     "Monash University Malaysia", "Software Engineering", 3.8, "2024", "Pending"));
     }
 
     public void addApplicant(Applicant applicant) {
