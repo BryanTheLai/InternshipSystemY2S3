@@ -5,9 +5,9 @@ import java.util.Objects;
 public class Applicant {
     private String id;
     private String name;
-    private Location location;
-    private JobType desiredJobType;
-    private Skill skill;
+    private Location location; // Dont use enum
+    private JobType desiredJobType; // Dont use enum
+    private Skill skill; // Dont use enum
 
     // Constructor
     public Applicant(String id, String name, Location location, JobType desiredJobType, Skill skill) {
