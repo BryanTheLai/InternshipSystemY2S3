@@ -3,12 +3,18 @@ package com.mycompany.internshipsystemy2s3.control;
 import com.mycompany.internshipsystemy2s3.dao.ApplicantDAO;
 import com.mycompany.internshipsystemy2s3.entity.Applicant;
 import com.mycompany.internshipsystemy2s3.adt.ListInterface;
+import com.mycompany.internshipsystemy2s3.dao.ApplicantDAO.FilterCriteria;
 
 public class ApplicantManagement {
     private ApplicantDAO applicantDAO;
 
     public ApplicantManagement() {
         this.applicantDAO = new ApplicantDAO();
+    }
+
+    // Generate a new ID for applicants
+    public String generateNewId() {
+        return applicantDAO.generateId();
     }
 
     // Add a new applicant
@@ -27,7 +33,7 @@ public class ApplicantManagement {
     }
 
     // Filter applicants based on criteria
-    public ListInterface<Applicant> filterApplicants(ApplicantDAO.FilterCriteria criteria) {
+    public ListInterface<Applicant> filterApplicants(FilterCriteria criteria) {
         return applicantDAO.filterApplicants(criteria);
     }
 

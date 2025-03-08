@@ -2,255 +2,393 @@ package com.mycompany.internshipsystemy2s3.boundary;
 
 import com.mycompany.internshipsystemy2s3.control.ApplicantManagement;
 import com.mycompany.internshipsystemy2s3.entity.Applicant;
+import com.mycompany.internshipsystemy2s3.dao.ApplicantDAO;
 import com.mycompany.internshipsystemy2s3.dao.ApplicantDAO.FilterCriteria;
 import com.mycompany.internshipsystemy2s3.adt.ListInterface;
-// Replace java.util.Scanner with standard Java IO
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.IOException;
+import java.util.Scanner;
 
 public class ApplicantManagementUI {
     private ApplicantManagement applicantManagement;
-    private BufferedReader reader; // Replace Scanner with BufferedReader
+    private Scanner scanner;
 
-    // Malaysian locations
     private static final String[] LOCATIONS = {
         "Shah Alam", "Cyberjaya", "Petaling Jaya", "Bangi", "Setapak", 
         "Seri Kembangan", "Kajang", "Subang Jaya", "Kota Damansara", 
         "Salak Tinggi", "Semenyih"
     };
 
-    // Skills
     private static final String[] SKILLS = {
         "Frontend", "Backend", "Fullstack", "DevOps", "Mobile", "Data Science",
         "Machine Learning", "Cloud Engineering", "Security", "Database Administration",
         "UI/UX Design", "Web Development", "Artificial Intelligence", "Cybersecurity"
     };
 
+    private static final String[] STATUS_OPTIONS = {
+        "Applied", "Pending", "Shortlisted", "Interview", "Offered", "Rejected"
+    };
+
     public ApplicantManagementUI() {
         this.applicantManagement = new ApplicantManagement();
-        // Use BufferedReader instead of Scanner
-        this.reader = new BufferedReader(new InputStreamReader(System.in));
+        this.scanner = new Scanner(System.in);
     }
 
-    // Helper method to read input (replacing scanner.nextLine())
+    private String formatApplicant(Applicant app) {
+        return String.format("%-8s %-20s %-15s %-15s %-25s %-20s GPA:%-5.2f Grad:%-6s %-10s", 
+            app.getId(), 
+            truncate(app.getName(), 20), 
+            truncate(app.getLocation(), 15), 
+            truncate(app.getSkill(), 15), 
+            truncate(app.getUniversity(), 25), 
+            truncate(app.getMajor(), 20), 
+            app.getGpa(), 
+            app.getGraduationYear(), 
+            app.getApplicationStatus());
+    }
+
+    // Helper method to truncate strings that are too long
+    private String truncate(String str, int maxLength) {
+        if (str == null || str.length() <= maxLength) {
+            return str;
+        }
+        return str.substring(0, maxLength - 3) + "...";
+    }
+
     private String readInput() {
-        try {
-            return reader.readLine();
-        } catch (IOException e) {
-            System.out.println("Error reading input: " + e.getMessage());
-            return "";
-        }
+        return scanner.nextLine().trim();
     }
 
-    // Helper method to read integer input
-    private int readIntInput() {
-        try {
-            return Integer.parseInt(readInput());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid number. Please try again.");
-            return readIntInput();
-        }
-    }
-
-    // Helper method to read double input
-    private double readDoubleInput() {
-        try {
-            return Double.parseDouble(readInput());
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid number. Please try again.");
-            return readDoubleInput();
-        }
-    }
-
-    public void displayMenu() {
+    private int readIntInput(int min, int max) {
         while (true) {
-            System.out.println("\nApplicant Management System");
-            System.out.println("1. Add Applicant");
-            System.out.println("2. Update Applicant");
-            System.out.println("3. Remove Applicant");
-            System.out.println("4. Filter Applicants");
-            System.out.println("5. Display All Applicants");
-            System.out.println("6. Exit");
-            System.out.print("Choose an option: ");
-            
-            int choice = readIntInput();
+            try {
+                int value = Integer.parseInt(readInput());
+                if (value >= min && value <= max) {
+                    return value;
+                }
+                System.out.printf("Enter number %d-%d: ", min, max);
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid. Enter number: ");
+            }
+        }
+    }
+
+    private double readDoubleInput(double min, double max) {
+        while (true) {
+            try {
+                double value = Double.parseDouble(readInput());
+                if (value >= min && value <= max) {
+                    return value;
+                }
+                System.out.printf("Enter number %.2f-%.2f: ", min, max);
+            } catch (NumberFormatException e) {
+                System.out.print("Invalid. Enter number: ");
+            }
+        }
+    }
+
+    private int displayMenu(String title, String[] options) {
+        System.out.println("\n" + title);
+        for (int i = 0; i < options.length; i++) {
+            System.out.printf("%d. %s\n", i + 1, options[i]);
+        }
+        System.out.print("Choose: ");
+        return readIntInput(1, options.length);
+    }
+
+    public void displayMainMenu() {
+        String[] menuOptions = {
+            "Add New Applicant", 
+            "Update Existing Applicant", 
+            "Remove Applicant", 
+            "Filter Applicants", 
+            "Display All Applicants", 
+            "Exit"
+        };
+        
+        while (true) {
+            System.out.println("\nINTERNSHIP APPLICANT MANAGEMENT SYSTEM");
+            int choice = displayMenu("MENU", menuOptions);
 
             switch (choice) {
-                case 1:
-                    addApplicant();
-                    break;
-                case 2:
-                    updateApplicant();
-                    break;
-                case 3:
-                    removeApplicant();
-                    break;
-                case 4:
-                    filterApplicants();
-                    break;
-                case 5:
-                    displayAllApplicants();
-                    break;
-                case 6:
+                case 1: addApplicant(); break;
+                case 2: updateApplicant(); break;
+                case 3: removeApplicant(); break;
+                case 4: filterApplicants(); break;
+                case 5: displayAllApplicants(); break;
+                case 6: 
+                    System.out.println("Goodbye!");
                     return;
-                default:
-                    System.out.println("Invalid choice. Please try again.");
             }
+            
+            System.out.print("Press Enter to continue...");
+            readInput();
         }
     }
 
     private void addApplicant() {
-        System.out.print("Enter ID: ");
-        String id = readInput();
+        System.out.println("\nADD NEW APPLICANT");
         
-        System.out.print("Enter Name: ");
+        String id = applicantManagement.generateNewId();
+        System.out.println("ID: " + id);
+        
+        System.out.print("Name: ");
         String name = readInput();
 
-        System.out.println("Available Locations:");
-        for (int i = 0; i < LOCATIONS.length; i++) {
-            System.out.println((i+1) + ". " + LOCATIONS[i]);
-        }
-        System.out.print("Select Location (enter number): ");
-        int locationChoice = readIntInput();
+        int locationChoice = displayMenu("Location", LOCATIONS);
         String location = LOCATIONS[locationChoice-1];
 
-        System.out.println("Available Skills:");
-        for (int i = 0; i < SKILLS.length; i++) {
-            System.out.println((i+1) + ". " + SKILLS[i]);
-        }
-        System.out.print("Select Skill (enter number): ");
-        int skillChoice = readIntInput();
+        int skillChoice = displayMenu("Skill", SKILLS);
         String skill = SKILLS[skillChoice-1];
 
-        System.out.print("Is this an internship applicant? (y/n): ");
-        String isInternship = readInput();
-
-        if (isInternship.equalsIgnoreCase("y")) {
-            System.out.println("Enter additional information for internship applicant:");
-            
-            System.out.print("University: ");
-            String university = readInput();
-            
-            System.out.print("Major: ");
-            String major = readInput();
-            
-            System.out.print("GPA: ");
-            double gpa = readDoubleInput();
-            
-            System.out.print("Graduation Year: ");
-            String gradYear = readInput();
-            
-            // Create Applicant with full constructor
-            Applicant applicant = new Applicant(id, name, location, skill,
-                                               university, major, gpa, gradYear, "Applied");
-            applicantManagement.addApplicant(applicant);
-        } else {
-            // Create basic Applicant
-            Applicant applicant = new Applicant(id, name, location, skill);
-            applicantManagement.addApplicant(applicant);
-        }
+        int universityChoice = displayMenu("University", ApplicantDAO.MALAYSIAN_UNIVERSITIES);
+        String university = ApplicantDAO.MALAYSIAN_UNIVERSITIES[universityChoice-1];
         
-        System.out.println("Applicant added successfully.");
+        int majorChoice = displayMenu("Major", ApplicantDAO.MAJORS);
+        String major = ApplicantDAO.MAJORS[majorChoice-1];
+        
+        System.out.print("GPA (0.00-4.00): ");
+        double gpa = readDoubleInput(0.00, 4.00);
+        
+        System.out.print("Graduation Year (1900-2100): ");
+        String gradYear = String.valueOf(readIntInput(1900, 2100));
+        
+        Applicant applicant = new Applicant(id, name, location, skill,
+                                          university, major, gpa, gradYear, "Applied");
+        applicantManagement.addApplicant(applicant);
+        
+        System.out.println("\nAdded: " + formatApplicant(applicant));
     }
 
     private void updateApplicant() {
-        System.out.print("Enter ID of the applicant to update: ");
-        String id = readInput();
-
-        System.out.print("Enter New Name: ");
-        String name = readInput();
-
-        System.out.println("Available Locations:");
-        for (int i = 0; i < LOCATIONS.length; i++) {
-            System.out.println((i+1) + ". " + LOCATIONS[i]);
-        }
-        System.out.print("Select New Location (enter number): ");
-        int locationChoice = readIntInput();
-        String location = LOCATIONS[locationChoice-1];
-
-        System.out.println("Available Skills:");
-        for (int i = 0; i < SKILLS.length; i++) {
-            System.out.println((i+1) + ". " + SKILLS[i]);
-        }
-        System.out.print("Select New Skill (enter number): ");
-        int skillChoice = readIntInput();
-        String skill = SKILLS[skillChoice-1];
-
-        System.out.print("Is this an internship applicant? (y/n): ");
-        String isInternship = readInput();
-
-        if (isInternship.equalsIgnoreCase("y")) {
-            System.out.println("Enter additional information for internship applicant:");
-            
-            System.out.print("University: ");
-            String university = readInput();
-            
-            System.out.print("Major: ");
-            String major = readInput();
-            
-            System.out.print("GPA: ");
-            double gpa = readDoubleInput();
-            
-            System.out.print("Graduation Year: ");
-            String gradYear = readInput();
-            
-            System.out.print("Application Status: ");
-            String status = readInput();
-            
-            Applicant updatedApplicant = new Applicant(id, name, location, skill,
-                                                     university, major, gpa, gradYear, status);
-            applicantManagement.updateApplicant(id, updatedApplicant);
-        } else {
-            Applicant updatedApplicant = new Applicant(id, name, location, skill);
-            applicantManagement.updateApplicant(id, updatedApplicant);
+        System.out.println("\nUPDATE APPLICANT");
+        
+        ListInterface<Applicant> allApplicants = applicantManagement.getAllApplicants();
+        if (allApplicants.size() == 0) {
+            System.out.println("No applicants found.");
+            return;
         }
         
-        System.out.println("Applicant updated successfully.");
+        System.out.println("Current applicants:");
+        for (int i = 0; i < allApplicants.size(); i++) {
+            Applicant app = allApplicants.get(i);
+            System.out.printf("%s: %s - %s\n", app.getId(), app.getName(), app.getSkill());
+        }
+        
+        System.out.print("\nID to update: ");
+        String id = readInput();
+        
+        boolean idExists = false;
+        for (int i = 0; i < allApplicants.size(); i++) {
+            if (allApplicants.get(i).getId().equals(id)) {
+                idExists = true;
+                break;
+            }
+        }
+        
+        if (!idExists) {
+            System.out.println("ID not found!");
+            return;
+        }
+
+        System.out.print("New Name: ");
+        String name = readInput();
+
+        int locationChoice = displayMenu("New Location", LOCATIONS);
+        String location = LOCATIONS[locationChoice-1];
+
+        int skillChoice = displayMenu("New Skill", SKILLS);
+        String skill = SKILLS[skillChoice-1];
+
+        int universityChoice = displayMenu("New University", ApplicantDAO.MALAYSIAN_UNIVERSITIES);
+        String university = ApplicantDAO.MALAYSIAN_UNIVERSITIES[universityChoice-1];
+        
+        int majorChoice = displayMenu("New Major", ApplicantDAO.MAJORS);
+        String major = ApplicantDAO.MAJORS[majorChoice-1];
+        
+        System.out.print("New GPA (0.00-4.00): ");
+        double gpa = readDoubleInput(0.00, 4.00);
+        
+        System.out.print("New Graduation Year (1900-2100): ");
+        String gradYear = String.valueOf(readIntInput(1900, 2100));
+        
+        int statusChoice = displayMenu("New Status", STATUS_OPTIONS);
+        String status = STATUS_OPTIONS[statusChoice-1];
+        
+        Applicant updatedApplicant = new Applicant(id, name, location, skill,
+                                                 university, major, gpa, gradYear, status);
+        applicantManagement.updateApplicant(id, updatedApplicant);
+        
+        System.out.println("\nUpdated: " + formatApplicant(updatedApplicant));
     }
 
     private void removeApplicant() {
-        System.out.print("Enter ID of the applicant to remove: ");
+        System.out.println("\nREMOVE APPLICANT");
+        
+        ListInterface<Applicant> allApplicants = applicantManagement.getAllApplicants();
+        if (allApplicants.size() == 0) {
+            System.out.println("No applicants found.");
+            return;
+        }
+        
+        System.out.println("Current applicants:");
+        for (int i = 0; i < allApplicants.size(); i++) {
+            Applicant app = allApplicants.get(i);
+            System.out.printf("%s: %s - %s\n", app.getId(), app.getName(), app.getSkill());
+        }
+        
+        System.out.print("\nID to remove: ");
         String id = readInput();
-        applicantManagement.removeApplicant(id);
-        System.out.println("Applicant removed successfully.");
+        
+        boolean idExists = false;
+        for (int i = 0; i < allApplicants.size(); i++) {
+            if (allApplicants.get(i).getId().equals(id)) {
+                idExists = true;
+                break;
+            }
+        }
+        
+        if (!idExists) {
+            System.out.println("ID not found!");
+            return;
+        }
+        
+        System.out.print("Confirm deletion (y/n): ");
+        if (readInput().equalsIgnoreCase("y")) {
+            applicantManagement.removeApplicant(id);
+            System.out.println("Applicant removed.");
+        } else {
+            System.out.println("Cancelled.");
+        }
     }
 
     private void filterApplicants() {
-        System.out.print("Enter Location to filter by (leave blank for no filter): ");
-        String locationInput = readInput();
-        System.out.print("Enter Skill to filter by (leave blank for no filter): ");
-        String skillInput = readInput();
+        System.out.println("\nFILTER APPLICANTS");
+        
+        String locationFilter = "";
+        System.out.print("Filter by location? (y/n): ");
+        if (readInput().equalsIgnoreCase("y")) {
+            locationFilter = LOCATIONS[displayMenu("Location", LOCATIONS) - 1];
+        }
+        
+        String skillFilter = "";
+        System.out.print("Filter by skill? (y/n): ");
+        if (readInput().equalsIgnoreCase("y")) {
+            skillFilter = SKILLS[displayMenu("Skill", SKILLS) - 1];
+        }
+        
+        String universityFilter = "";
+        System.out.print("Filter by university? (y/n): ");
+        if (readInput().equalsIgnoreCase("y")) {
+            universityFilter = ApplicantDAO.MALAYSIAN_UNIVERSITIES[
+                displayMenu("University", ApplicantDAO.MALAYSIAN_UNIVERSITIES) - 1];
+        }
+        
+        String majorFilter = "";
+        System.out.print("Filter by major? (y/n): ");
+        if (readInput().equalsIgnoreCase("y")) {
+            majorFilter = ApplicantDAO.MAJORS[displayMenu("Major", ApplicantDAO.MAJORS) - 1];
+        }
+        
+        double gpaFilter = 0.0;
+        System.out.print("Filter by minimum GPA? (y/n): ");
+        if (readInput().equalsIgnoreCase("y")) {
+            System.out.print("Minimum GPA (0.00-4.00): ");
+            gpaFilter = readDoubleInput(0.00, 4.00);
+        }
+        
+        int startYearFilter = 0;
+        int endYearFilter = 2100;
+        System.out.print("Filter by graduation year? (y/n): ");
+        if (readInput().equalsIgnoreCase("y")) {
+            System.out.print("Start year (1900-2100): ");
+            startYearFilter = readIntInput(1900, 2100);
+            System.out.print("End year (>= start year): ");
+            endYearFilter = readIntInput(startYearFilter, 2100);
+        }
+        
+        // Print selected filters
+        System.out.println("\nFilters:");
+        if (!locationFilter.isEmpty()) System.out.println("Location: " + locationFilter);
+        if (!skillFilter.isEmpty()) System.out.println("Skill: " + skillFilter);
+        if (!universityFilter.isEmpty()) System.out.println("University: " + universityFilter);
+        if (!majorFilter.isEmpty()) System.out.println("Major: " + majorFilter);
+        if (gpaFilter > 0) System.out.println("Min GPA: " + gpaFilter);
+        if (startYearFilter > 0) System.out.println("Years: " + startYearFilter + "-" + endYearFilter);
+
+        final String fLocation = locationFilter;
+        final String fSkill = skillFilter;
+        final String fUniversity = universityFilter;
+        final String fMajor = majorFilter;
+        final double fGpa = gpaFilter;
+        final int fStartYear = startYearFilter;
+        final int fEndYear = endYearFilter;
 
         FilterCriteria criteria = applicant -> {
-            boolean matches = true;
-            if (!locationInput.isEmpty()) {
-                matches &= applicant.getLocation().equalsIgnoreCase(locationInput);
+            if (!fLocation.isEmpty() && !applicant.getLocation().equalsIgnoreCase(fLocation)) return false;
+            if (!fSkill.isEmpty() && !applicant.getSkill().equalsIgnoreCase(fSkill)) return false;
+            if (!fUniversity.isEmpty() && !applicant.getUniversity().equalsIgnoreCase(fUniversity)) return false;
+            if (!fMajor.isEmpty() && !applicant.getMajor().equalsIgnoreCase(fMajor)) return false;
+            if (fGpa > 0 && applicant.getGpa() < fGpa) return false;
+            if (fStartYear > 0) {
+                int gradYear = Integer.parseInt(applicant.getGraduationYear());
+                if (gradYear < fStartYear || gradYear > fEndYear) return false;
             }
-            if (!skillInput.isEmpty()) {
-                matches &= applicant.getSkill().equalsIgnoreCase(skillInput);
-            }
-            return matches;
+            return true;
         };
 
         ListInterface<Applicant> filteredApplicants = applicantManagement.filterApplicants(criteria);
 
-        System.out.println("Filtered Applicants:");
-        for (int i = 0; i < filteredApplicants.size(); i++) {
-            System.out.println(filteredApplicants.get(i));
+        System.out.println("\nRESULTS:");
+        if (filteredApplicants.size() > 0) {
+            for (int i = 0; i < filteredApplicants.size(); i++) {
+                System.out.println(formatApplicant(filteredApplicants.get(i)));
+            }
+            System.out.println("Total matches: " + filteredApplicants.size());
+        } else {
+            System.out.println("No matches found.");
         }
     }
 
     private void displayAllApplicants() {
+        System.out.println("\nALL APPLICANTS");
+        
         ListInterface<Applicant> allApplicants = applicantManagement.getAllApplicants();
-        System.out.println("All Applicants:");
-        for (int i = 0; i < allApplicants.size(); i++) {
-            System.out.println(allApplicants.get(i));
+        
+        if (allApplicants.size() > 0) {
+            // Display statistics
+            int totalApplicants = allApplicants.size();
+            double avgGpa = 0;
+            int appliedCount = 0, pendingCount = 0, interviewCount = 0, offeredCount = 0;
+            
+            for (int i = 0; i < totalApplicants; i++) {
+                Applicant app = allApplicants.get(i);
+                avgGpa += app.getGpa();
+                
+                switch (app.getApplicationStatus().toLowerCase()) {
+                    case "applied": appliedCount++; break;
+                    case "pending": pendingCount++; break;
+                    case "interview": interviewCount++; break;
+                    case "offered": offeredCount++; break;
+                }
+            }
+            avgGpa /= totalApplicants;
+            
+            System.out.println("\nSTATISTICS:");
+            System.out.printf("Count: %d | Avg GPA: %.2f\n", totalApplicants, avgGpa);
+            System.out.printf("Applied: %d | Pending: %d | Interview: %d | Offered: %d\n", 
+                appliedCount, pendingCount, interviewCount, offeredCount);
+            
+            // Display all applicants
+            System.out.println("\nAPPLICANTS:");
+            for (int i = 0; i < allApplicants.size(); i++) {
+                System.out.println(formatApplicant(allApplicants.get(i)));
+            }
+        } else {
+            System.out.println("No applicants found.");
         }
     }
 
     public static void main(String[] args) {
         ApplicantManagementUI ui = new ApplicantManagementUI();
-        ui.displayMenu();
+        ui.displayMainMenu();
     }
 }
