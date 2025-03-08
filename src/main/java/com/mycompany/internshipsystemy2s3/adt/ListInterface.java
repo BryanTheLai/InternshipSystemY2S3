@@ -1,18 +1,71 @@
 package com.mycompany.internshipsystemy2s3.adt;
 
 /**
+ * DoublyLinkedListInterface.java
+ * Interface for DoublyLinkedList ADT.
  *
- * @author wbrya
+ * @param <T> Element type.
  */
-public interface ListInterface<T> {
-    void add(T newEntry);                       // Adds newEntry to the end of the list
-    boolean add(int newPosition, T newEntry);   // Adds newEntry at givenPosition
-    T remove(int givenPosition);                // Removes the entry at givenPosition
-    void clear();                               // Removes all entries from the list
-    boolean replace(int givenPosition, T newEntry); // Replaces the entry at givenPosition with newEntry
-    T getEntry(int givenPosition);              // Returns the entry at givenPosition
-    boolean contains(T anEntry);                // True if list contains anEntry, false otherwise
-    int getNumberOfEntries();                   // Returns the number of entries in the list
-    boolean isEmpty();                          // True if list is empty, false otherwise
-    boolean isFull();                           // True if list is full, false otherwise
+public interface ListInterface<T> extends Iterable<T> {
+
+    /**
+     * Adds an element to the end of the list.
+     *
+     * @param element The element to be added.
+     */
+    void add(T element);
+
+    /**
+     * Adds an element at a specific index in the list.
+     *
+     * @param index   The index at which the element is to be inserted.
+     * @param element The element to be added.
+     * @throws IndexOutOfBoundsException if index is invalid.
+     */
+    void add(int index, T element);
+
+    /**
+     * Retrieves the element at the specified index in the list.
+     *
+     * @param index The index of the element to retrieve.
+     * @return The element at the specified index.
+     * @throws IndexOutOfBoundsException if index is invalid.
+     */
+    T get(int index);
+
+    /**
+     * Removes the element at the specified index in the list.
+     *
+     * @param index The index of the element to be removed.
+     * @return The element that was removed.
+     * @throws IndexOutOfBoundsException if index is invalid.
+     */
+    T remove(int index);
+
+    /**
+     * Removes the first occurrence of the specified element from the list, if present.
+     *
+     * @param element The element to be removed.
+     * @return true if the element was successfully removed, false otherwise.
+     */
+    boolean remove(T element);
+
+    /**
+     * Returns the number of elements in the list.
+     *
+     * @return The size of the list.
+     */
+    int size();
+
+    /**
+     * Checks if the list is empty.
+     *
+     * @return true if the list contains no elements, false otherwise.
+     */
+    boolean isEmpty();
+
+    /**
+     * Clears all elements from the list, making it empty.
+     */
+    void clear();
 }

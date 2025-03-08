@@ -3,23 +3,21 @@ package com.mycompany.internshipsystemy2s3.boundary;
 import com.mycompany.internshipsystemy2s3.control.ApplicantManagement;
 import com.mycompany.internshipsystemy2s3.entity.Applicant;
 import com.mycompany.internshipsystemy2s3.dao.ApplicantDAO.FilterCriteria;
-import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedListInterface;
-import java.util.Scanner;
+import com.mycompany.internshipsystemy2s3.adt.ListInterface;
+// Replace java.util.Scanner with standard Java IO
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.io.IOException;
 
 public class ApplicantManagementUI {
     private ApplicantManagement applicantManagement;
-    private Scanner scanner;
+    private BufferedReader reader; // Replace Scanner with BufferedReader
 
     // Malaysian locations
     private static final String[] LOCATIONS = {
         "Shah Alam", "Cyberjaya", "Petaling Jaya", "Bangi", "Setapak", 
         "Seri Kembangan", "Kajang", "Subang Jaya", "Kota Damansara", 
         "Salak Tinggi", "Semenyih"
-    };
-
-    // Job types
-    private static final String[] JOB_TYPES = {
-        "Full-time", "Part-time", "Internship"
     };
 
     // Skills
@@ -31,7 +29,38 @@ public class ApplicantManagementUI {
 
     public ApplicantManagementUI() {
         this.applicantManagement = new ApplicantManagement();
-        this.scanner = new Scanner(System.in);
+        // Use BufferedReader instead of Scanner
+        this.reader = new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    // Helper method to read input (replacing scanner.nextLine())
+    private String readInput() {
+        try {
+            return reader.readLine();
+        } catch (IOException e) {
+            System.out.println("Error reading input: " + e.getMessage());
+            return "";
+        }
+    }
+
+    // Helper method to read integer input
+    private int readIntInput() {
+        try {
+            return Integer.parseInt(readInput());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number. Please try again.");
+            return readIntInput();
+        }
+    }
+
+    // Helper method to read double input
+    private double readDoubleInput() {
+        try {
+            return Double.parseDouble(readInput());
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid number. Please try again.");
+            return readDoubleInput();
+        }
     }
 
     public void displayMenu() {
@@ -44,8 +73,8 @@ public class ApplicantManagementUI {
             System.out.println("5. Display All Applicants");
             System.out.println("6. Exit");
             System.out.print("Choose an option: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            
+            int choice = readIntInput();
 
             switch (choice) {
                 case 1:
@@ -73,55 +102,52 @@ public class ApplicantManagementUI {
 
     private void addApplicant() {
         System.out.print("Enter ID: ");
-        String id = scanner.nextLine();
+        String id = readInput();
+        
         System.out.print("Enter Name: ");
-        String name = scanner.nextLine();
+        String name = readInput();
 
         System.out.println("Available Locations:");
         for (int i = 0; i < LOCATIONS.length; i++) {
             System.out.println((i+1) + ". " + LOCATIONS[i]);
         }
         System.out.print("Select Location (enter number): ");
-        int locationChoice = Integer.parseInt(scanner.nextLine());
+        int locationChoice = readIntInput();
         String location = LOCATIONS[locationChoice-1];
-
-        System.out.println("Available Job Types:");
-        for (int i = 0; i < JOB_TYPES.length; i++) {
-            System.out.println((i+1) + ". " + JOB_TYPES[i]);
-        }
-        System.out.print("Select Desired Job Type (enter number): ");
-        int jobChoice = Integer.parseInt(scanner.nextLine());
-        String desiredJobType = JOB_TYPES[jobChoice-1];
 
         System.out.println("Available Skills:");
         for (int i = 0; i < SKILLS.length; i++) {
             System.out.println((i+1) + ". " + SKILLS[i]);
         }
         System.out.print("Select Skill (enter number): ");
-        int skillChoice = Integer.parseInt(scanner.nextLine());
+        int skillChoice = readIntInput();
         String skill = SKILLS[skillChoice-1];
 
-        // For internship applicants, collect additional information
-        if (desiredJobType.equals("Internship")) {
+        System.out.print("Is this an internship applicant? (y/n): ");
+        String isInternship = readInput();
+
+        if (isInternship.equalsIgnoreCase("y")) {
             System.out.println("Enter additional information for internship applicant:");
             
             System.out.print("University: ");
-            String university = scanner.nextLine();
+            String university = readInput();
             
             System.out.print("Major: ");
-            String major = scanner.nextLine();
+            String major = readInput();
             
             System.out.print("GPA: ");
-            double gpa = Double.parseDouble(scanner.nextLine());
+            double gpa = readDoubleInput();
             
             System.out.print("Graduation Year: ");
-            String gradYear = scanner.nextLine();
+            String gradYear = readInput();
             
-            Applicant applicant = new Applicant(id, name, location, desiredJobType, skill,
+            // Create Applicant with full constructor
+            Applicant applicant = new Applicant(id, name, location, skill,
                                                university, major, gpa, gradYear, "Applied");
             applicantManagement.addApplicant(applicant);
         } else {
-            Applicant applicant = new Applicant(id, name, location, desiredJobType, skill);
+            // Create basic Applicant
+            Applicant applicant = new Applicant(id, name, location, skill);
             applicantManagement.addApplicant(applicant);
         }
         
@@ -130,59 +156,53 @@ public class ApplicantManagementUI {
 
     private void updateApplicant() {
         System.out.print("Enter ID of the applicant to update: ");
-        String id = scanner.nextLine();
+        String id = readInput();
 
         System.out.print("Enter New Name: ");
-        String name = scanner.nextLine();
+        String name = readInput();
 
         System.out.println("Available Locations:");
         for (int i = 0; i < LOCATIONS.length; i++) {
             System.out.println((i+1) + ". " + LOCATIONS[i]);
         }
         System.out.print("Select New Location (enter number): ");
-        int locationChoice = Integer.parseInt(scanner.nextLine());
+        int locationChoice = readIntInput();
         String location = LOCATIONS[locationChoice-1];
-
-        System.out.println("Available Job Types:");
-        for (int i = 0; i < JOB_TYPES.length; i++) {
-            System.out.println((i+1) + ". " + JOB_TYPES[i]);
-        }
-        System.out.print("Select New Desired Job Type (enter number): ");
-        int jobChoice = Integer.parseInt(scanner.nextLine());
-        String desiredJobType = JOB_TYPES[jobChoice-1];
 
         System.out.println("Available Skills:");
         for (int i = 0; i < SKILLS.length; i++) {
             System.out.println((i+1) + ". " + SKILLS[i]);
         }
         System.out.print("Select New Skill (enter number): ");
-        int skillChoice = Integer.parseInt(scanner.nextLine());
+        int skillChoice = readIntInput();
         String skill = SKILLS[skillChoice-1];
 
-        // For internship applicants, collect additional information
-        if (desiredJobType.equals("Internship")) {
+        System.out.print("Is this an internship applicant? (y/n): ");
+        String isInternship = readInput();
+
+        if (isInternship.equalsIgnoreCase("y")) {
             System.out.println("Enter additional information for internship applicant:");
             
             System.out.print("University: ");
-            String university = scanner.nextLine();
+            String university = readInput();
             
             System.out.print("Major: ");
-            String major = scanner.nextLine();
+            String major = readInput();
             
             System.out.print("GPA: ");
-            double gpa = Double.parseDouble(scanner.nextLine());
+            double gpa = readDoubleInput();
             
             System.out.print("Graduation Year: ");
-            String gradYear = scanner.nextLine();
+            String gradYear = readInput();
             
             System.out.print("Application Status: ");
-            String status = scanner.nextLine();
+            String status = readInput();
             
-            Applicant updatedApplicant = new Applicant(id, name, location, desiredJobType, skill,
+            Applicant updatedApplicant = new Applicant(id, name, location, skill,
                                                      university, major, gpa, gradYear, status);
             applicantManagement.updateApplicant(id, updatedApplicant);
         } else {
-            Applicant updatedApplicant = new Applicant(id, name, location, desiredJobType, skill);
+            Applicant updatedApplicant = new Applicant(id, name, location, skill);
             applicantManagement.updateApplicant(id, updatedApplicant);
         }
         
@@ -191,26 +211,21 @@ public class ApplicantManagementUI {
 
     private void removeApplicant() {
         System.out.print("Enter ID of the applicant to remove: ");
-        String id = scanner.nextLine();
+        String id = readInput();
         applicantManagement.removeApplicant(id);
         System.out.println("Applicant removed successfully.");
     }
 
     private void filterApplicants() {
         System.out.print("Enter Location to filter by (leave blank for no filter): ");
-        String locationInput = scanner.nextLine();
-        System.out.print("Enter Desired Job Type to filter by (leave blank for no filter): ");
-        String jobTypeInput = scanner.nextLine();
+        String locationInput = readInput();
         System.out.print("Enter Skill to filter by (leave blank for no filter): ");
-        String skillInput = scanner.nextLine();
+        String skillInput = readInput();
 
         FilterCriteria criteria = applicant -> {
             boolean matches = true;
             if (!locationInput.isEmpty()) {
                 matches &= applicant.getLocation().equalsIgnoreCase(locationInput);
-            }
-            if (!jobTypeInput.isEmpty()) {
-                matches &= applicant.getDesiredJobType().equalsIgnoreCase(jobTypeInput);
             }
             if (!skillInput.isEmpty()) {
                 matches &= applicant.getSkill().equalsIgnoreCase(skillInput);
@@ -218,7 +233,7 @@ public class ApplicantManagementUI {
             return matches;
         };
 
-        DoublyLinkedListInterface<Applicant> filteredApplicants = applicantManagement.filterApplicants(criteria);
+        ListInterface<Applicant> filteredApplicants = applicantManagement.filterApplicants(criteria);
 
         System.out.println("Filtered Applicants:");
         for (int i = 0; i < filteredApplicants.size(); i++) {
@@ -227,7 +242,7 @@ public class ApplicantManagementUI {
     }
 
     private void displayAllApplicants() {
-        DoublyLinkedListInterface<Applicant> allApplicants = applicantManagement.getAllApplicants();
+        ListInterface<Applicant> allApplicants = applicantManagement.getAllApplicants();
         System.out.println("All Applicants:");
         for (int i = 0; i < allApplicants.size(); i++) {
             System.out.println(allApplicants.get(i));

@@ -1,45 +1,37 @@
 package com.mycompany.internshipsystemy2s3.entity;
 
-import java.util.Objects;
-
 public class Applicant {
     private String id;
     private String name;
     private String location;
-    private String desiredJobType;
     private String skill;
-    
-    // Additional fields relevant for internship applicants
     private String university;
     private String major;
     private double gpa;
     private String graduationYear;
     private String applicationStatus;
-
-    // Constructor
-    public Applicant(String id, String name, String location, String desiredJobType, String skill) {
-        this.id = id;
-        this.name = name;
-        this.location = location;
-        this.desiredJobType = desiredJobType;
-        this.skill = skill;
-        this.applicationStatus = "Applied"; // Default status
-    }
     
     // Full constructor with all fields
-    public Applicant(String id, String name, String location, String desiredJobType, String skill,
+    public Applicant(String id, String name, String location, String skill,
                     String university, String major, double gpa, String graduationYear,
                     String applicationStatus) {
         this.id = id;
         this.name = name;
         this.location = location;
-        this.desiredJobType = desiredJobType;
         this.skill = skill;
         this.university = university;
         this.major = major;
         this.gpa = gpa;
         this.graduationYear = graduationYear;
         this.applicationStatus = applicationStatus;
+    }
+    
+    // Basic constructor for non-internship applicants
+    public Applicant(String id, String name, String location, String skill) {
+        this.id = id;
+        this.name = name;
+        this.location = location;
+        this.skill = skill;
     }
 
     // Getters and Setters
@@ -65,14 +57,6 @@ public class Applicant {
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public String getDesiredJobType() {
-        return desiredJobType;
-    }
-
-    public void setDesiredJobType(String desiredJobType) {
-        this.desiredJobType = desiredJobType;
     }
 
     public String getSkill() {
@@ -130,7 +114,6 @@ public class Applicant {
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", location='" + location + '\'' +
-                ", desiredJobType='" + desiredJobType + '\'' +
                 ", skill='" + skill + '\'' +
                 (university != null ? ", university='" + university + '\'' : "") +
                 (major != null ? ", major='" + major + '\'' : "") +
@@ -140,21 +123,33 @@ public class Applicant {
                 '}';
     }
 
-    // Override equals method
+    // Override equals method without using java.util.Objects
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Applicant applicant = (Applicant) o;
-        return Objects.equals(id, applicant.id) &&
-               Objects.equals(name, applicant.name) &&
-               Objects.equals(location, applicant.location) &&
-               Objects.equals(desiredJobType, applicant.desiredJobType) &&
-               Objects.equals(skill, applicant.skill);
+        return equals(id, applicant.id) &&
+               equals(name, applicant.name) &&
+               equals(location, applicant.location) &&
+               equals(skill, applicant.skill);
     }
 
+    // Custom null-safe equality check
+    private boolean equals(Object a, Object b) {
+        if (a == b) return true;
+        if (a == null || b == null) return false;
+        return a.equals(b);
+    }
+
+    // Override hashCode without using java.util.Objects
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, location, desiredJobType, skill);
+        int result = 17;
+        result = 31 * result + (id != null ? id.hashCode() : 0);
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (skill != null ? skill.hashCode() : 0);
+        return result;
     }
 }

@@ -6,7 +6,7 @@ package com.mycompany.internshipsystemy2s3.adt;
  *
  * @param <T> The type of elements stored in the list.
  */
-public class DoublyLinkedList<T> implements DoublyLinkedListInterface<T> {
+public class DoublyLinkedList<T> implements ListInterface<T> {
 
     /**
      * Node - Represents a node in the doubly linked list.
