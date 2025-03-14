@@ -1,6 +1,6 @@
 package com.mycompany.internshipsystemy2s3.boundary;
 
-import com.mycompany.internshipsystemy2s3.control.ApplicantManagement;
+import com.mycompany.internshipsystemy2s3.control.ApplicantController;
 import com.mycompany.internshipsystemy2s3.entity.Applicant;
 import com.mycompany.internshipsystemy2s3.dao.ApplicantDAO;
 import com.mycompany.internshipsystemy2s3.dao.ApplicantDAO.FilterCriteria;
@@ -8,7 +8,7 @@ import com.mycompany.internshipsystemy2s3.adt.ListInterface;
 import java.util.Scanner;
 
 public class ApplicantManagementUI {
-    private ApplicantManagement applicantManagement;
+    private ApplicantController applicantManagement;
     private Scanner scanner;
 
     private static final String[] LOCATIONS = {
@@ -28,7 +28,7 @@ public class ApplicantManagementUI {
     };
 
     public ApplicantManagementUI() {
-        this.applicantManagement = new ApplicantManagement();
+        this.applicantManagement = new ApplicantController();
         this.scanner = new Scanner(System.in);
     }
 

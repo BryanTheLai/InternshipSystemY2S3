@@ -5,10 +5,10 @@ import com.mycompany.internshipsystemy2s3.entity.Applicant;
 import com.mycompany.internshipsystemy2s3.adt.ListInterface;
 import com.mycompany.internshipsystemy2s3.dao.ApplicantDAO.FilterCriteria;
 
-public class ApplicantManagement {
+public class ApplicantController {
     private ApplicantDAO applicantDAO;
 
-    public ApplicantManagement() {
+    public ApplicantController() {
         this.applicantDAO = new ApplicantDAO();
     }
 
