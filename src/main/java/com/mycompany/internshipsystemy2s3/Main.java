@@ -1,14 +1,14 @@
 package com.mycompany.internshipsystemy2s3;
 
 import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedList;
-import com.mycompany.internshipsystemy2s3.adt.DoublyLinkedListInterface;
+import com.mycompany.internshipsystemy2s3.adt.ListInterface;
 
 /**
  * Demonstrates DoublyLinkedList operations.
  */
 public class Main {
     public static void main(String[] args) {
-        DoublyLinkedListInterface<String> myList = new DoublyLinkedList<>();
+        ListInterface<String> myList = new DoublyLinkedList<>();
 
         System.out.println("Is empty? " + myList.isEmpty());
 
